@@ -7,7 +7,10 @@ https://github.com/MachineKillin/MSMC
 - Steam
 - Discord (Estimated Year)
 - Reddit (Estimated Year)
+
 More Checks will be added soon! I also hope to improve the captures.
+
+It is already extremely easy to add your own checks in but I will make it even easier in the future.
 
 ## Adding to MSMC 
 Adding this to MSMC is very simple.

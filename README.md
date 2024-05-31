@@ -10,18 +10,17 @@ msmc is a minecraft account checker that checks through microsoft xbox login ins
 - Steam
 - Discord (Estimated Year)
 - Reddit (Estimated Year)
+- Epic Games
 
 More Checks will be added soon! I also hope to improve the captures.
 
-It is already extremely easy to add your own checks in but I will make it even easier in the future.
-
-## Adding to MSMC 
+## Installation (READ THIS)
 Adding this to MSMC is very simple.
 
 Go to the root of MSMC and create a new folder called extra then download and place inbox.py there.
 ![](https://media.discordapp.net/attachments/1212680059119341578/1245922627743252490/image.png?ex=665a835e&is=665931de&hm=5be4e1bef01831ccbc98dab5b680f58c80c42d482d20654339109c6e930485dc&=&format=webp&quality=lossless)
 
-Now open MSMC.py and add the following import.
+Now edit ``MSMC.py`` and add the following import.
 
 ```py
 from extra.inbox import inboxmail
@@ -37,6 +36,29 @@ inboxmail(email, password)
 ```
 ![](https://media.discordapp.net/attachments/1212680059119341578/1245924160539197461/image.png?ex=665a84cc&is=6659334c&hm=eed06bfb103947a32d7b7c88ceb64343205e43147d4a1982a578391038ef645a&=&format=webp&quality=lossless)
 
-Now all you have to do is open inbox.py and edit the config. I will add a seperate proper config in the future.
+Now all you have to do is edit ``config.json``!
 
 You can pick to enable/disable each check and edit the discord webhook there.
+
+## Adding Custom Checks
+I made adding your own checks extremely easy!
+
+Simply edit ``custom_checks.json`` and create a new check. 
+
+**Note:** Each check ``}`` must end in an ``,``. EXCEPT: the last one must end with just the ``}``.
+
+Here is an example custom check for PayPal, CashApp and Venmo:
+
+```json
+{
+    "PayPal": {
+        "email": "service@paypal.com"
+    },
+    "CashApp": {
+        "email": "no-reply@cash.app"
+    },
+    "Venmo": {
+        "email": "venmo@venmo.com"
+    }
+}
+```

@@ -36,14 +36,14 @@ inboxmail(email, password)
 ```
 ![](https://media.discordapp.net/attachments/1212680059119341578/1245924160539197461/image.png?ex=665a84cc&is=6659334c&hm=eed06bfb103947a32d7b7c88ceb64343205e43147d4a1982a578391038ef645a&=&format=webp&quality=lossless)
 
-Now all you have to do is edit ``config.json``!
+Now all you have to do is edit ``Inbox/config.json``!
 
 You can pick to enable/disable each check and edit the discord webhook there.
 
 ## Adding Custom Checks
 I made adding your own checks extremely easy!
 
-Simply edit ``custom_checks.json`` and create a new check. 
+Simply edit ``Inbox/custom_checks.json`` and create a new check. 
 
 **Note:** Each check ``}`` must end in an ``,``. EXCEPT: the last one must end with just the ``}``.
 

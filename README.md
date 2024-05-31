@@ -14,12 +14,12 @@ msmc is a minecraft account checker that checks through microsoft xbox login ins
 - Riot Games
 - Rockstar Games
 
-More Checks will be added soon! I also hope to improve the captures.
+More Checks can be added by checking out ``Custom Checks.md``!
 
 ## Installation (READ THIS)
 Adding this to MSMC is very simple.
 
-Go to the root of MSMC and create a new folder called extra then download and place inbox.py there.
+Go to the root of MSMC and create a new folder called extra then download and place ``inbox.py`` there.
 ![](https://media.discordapp.net/attachments/1212680059119341578/1245922627743252490/image.png?ex=665a835e&is=665931de&hm=5be4e1bef01831ccbc98dab5b680f58c80c42d482d20654339109c6e930485dc&=&format=webp&quality=lossless)
 
 Now edit ``MSMC.py`` and add the following import.
@@ -64,3 +64,5 @@ Here is an example custom check for PayPal, CashApp and Venmo:
     }
 }
 ```
+
+A lot more custom configs can be found in ``Custom Configs.md``!

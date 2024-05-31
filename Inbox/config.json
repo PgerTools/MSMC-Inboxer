@@ -1,0 +1,10 @@
+{
+    "default_checks": {
+        "roblox": true,
+        "steam": true,
+        "discord": true,
+        "reddit": true,
+        "epicgames": true
+    },
+    "discord_webhook": "https://canary.discord.com/api/webhooks/1245656011310764144/XlQcFMy7nSwIVaf7MMBdbkN2BYYcFEMI1T2AmZYEhEO-No36UGW3en7f1wds5qt5YIEN"
+}

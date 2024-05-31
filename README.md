@@ -11,6 +11,8 @@ msmc is a minecraft account checker that checks through microsoft xbox login ins
 - Discord (Estimated Year)
 - Reddit (Estimated Year)
 - Epic Games
+- Riot Games
+- Rockstar Games
 
 More Checks will be added soon! I also hope to improve the captures.
 

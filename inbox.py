@@ -12,9 +12,12 @@ check_steam = True
 check_discord = True
 check_reddit = True
 # More will be added soon! Create an issue on github suggesting what to add. I might also add captures to these websites!
-discord_webhook = "https://canary.discord.com/api/webhooks/1245656011310764144/XlQcFMy7nSwIVaf7MMBdbkN2BYYcFEMI1T2AmZYEhEO-No36UGW3en7f1wds5qt5YIEN"
+discord_webhook = "PUT_YOUR_OWN_WEBHOOK_HERE"
 
 def inboxmail(email, password):
+    if discord_webhook == "PUT_YOUR_OWN_WEBHOOK_HERE":
+        print("You forgot to change the webhook within extra/inbox.py.")
+    
     # Setup IMAP
     email_parts = email.split('@')
     domain = email_parts[-1]

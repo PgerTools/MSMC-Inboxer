@@ -1,23 +1,22 @@
 import imaplib, requests, json
 from email.utils import parsedate_to_datetime
 
-# Addon for MSMC
-# This very simple addon allows you to change MSMC into an inboxing tool along with the normal minecraft checker.
-# This takes valid mails from MSMC and checks for the amount of emails sent from websites like roblox, steam, discord, and more!
-# This requires no proxies!
+with open('config.json', 'r') as config_file:
+    config = json.load(config_file)
 
-# Config: An actual config file might be added soon.
-check_roblox = True
-check_steam = True
-check_discord = True
-check_reddit = True
-# More will be added soon! Create an issue on github suggesting what to add. I might also add captures to these websites!
-discord_webhook = "PUT_YOUR_OWN_WEBHOOK_HERE"
+with open('custom_checks.json', 'r') as custom_file:
+    custom_checks = json.load(custom_file)
+
+# Default Checks
+check_roblox = config["default_checks"]["roblox"]
+check_steam = config["default_checks"]["steam"]
+check_discord = config["default_checks"]["discord"]
+check_reddit = config["default_checks"]["reddit"]
+check_epicgames = config["default_checks"]["epicgames"]
+
+discord_webhook = config["discord_webhook"]
 
 def inboxmail(email, password):
-    if discord_webhook == "PUT_YOUR_OWN_WEBHOOK_HERE":
-        print("You forgot to change the webhook within extra/inbox.py.")
-    
     # Setup IMAP
     email_parts = email.split('@')
     domain = email_parts[-1]
@@ -60,16 +59,37 @@ def inboxmail(email, password):
                                 email_date = parsedate_to_datetime(date_str)
                                 discord_year = email_date.year
                 if check_reddit == True:
-                    result, data = imap.uid("search", None, f'(FROM "noreply@reddit.com")')
-                    if result == "OK":
-                        reddit_uids = data[0].split()
-                        counts['Reddit'] = len(reddit_uids)
-                        if len(reddit_uids) > 1:
-                            result, data = imap.uid("fetch", reddit_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
+                    main_result, main_data = imap.uid("search", None, f'(FROM "noreply@reddit.com")')
+                    mail_result, mail_data = imap.uid("search", None, f'(FROM "noreply@redditmail.com")')
+                    if main_result == "OK" and mail_result == "OK":
+                        main_uids = main_data[0].split()
+                        mail_uids = mail_data[0].split()
+                        counts['Reddit'] = len(main_uids + mail_uids)
+                        if len(mail_uids) > 1:
+                            result, data = imap.uid("fetch", mail_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()
                                 email_date = parsedate_to_datetime(date_str)
                                 reddit_year = email_date.year
+                        
+                        elif len(main_uids) > 1:
+                            result, data = imap.uid("fetch", main_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
+                            if result == "OK":
+                                date_str = data[0][1].decode().strip()
+                                email_date = parsedate_to_datetime(date_str)
+                                reddit_year = email_date.year
+                if check_epicgames == True:
+                    result, data = imap.uid("search", None, f'(FROM "help@accts.epicgames.com")')
+                    if result == "OK":
+                        counts['Epic Games'] = len(data[0].split())
+                
+                # Custom Checks
+                for check_name, check_info in custom_checks.items():
+                    if check_name.lower() == "example_check":
+                        continue
+                    result, data = imap.uid("search", None, f'(FROM "{check_info["email"]}")')
+                    if result == "OK":
+                        counts[check_name] = len(data[0].split())
 
         except Exception as e:
             continue

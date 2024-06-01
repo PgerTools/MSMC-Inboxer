@@ -19,24 +19,29 @@ More Checks can be added by checking out ``Custom Checks.md``!
 ## Installation (READ THIS)
 Adding this to MSMC is very simple.
 
-Go to the root of MSMC and create a new folder called extra then download and place ``inbox.py`` there.
+**Video:** 
 
-Now edit ``MSMC.py`` and add the following import.
+https://github.com/PgerTools/MSMC-Inbox/assets/160817198/7a5d6288-67d9-46a2-b7fa-350d6009e4f3
+
+**Step By Step:**
+
+1. Go to the root of MSMC and create a new folder called extra then download and place ``inbox.py`` there.
+
+2. Now edit ``MSMC.py`` and add the following import.
 
 ```py
 from addons.inbox import inboxmail
 ```
 
-Search for the validmail function. (You can do this using Ctrl+F)
+3. Search for the validmail function. (You can do this using Ctrl+F)
 
-Add the end of this function add the following code.
+4. Add the end of this function add the following code.
 
 ```py
 inboxmail(email, password)
 ```
-![](https://media.discordapp.net/attachments/1212680059119341578/1245924160539197461/image.png?ex=665a84cc&is=6659334c&hm=eed06bfb103947a32d7b7c88ceb64343205e43147d4a1982a578391038ef645a&=&format=webp&quality=lossless)
 
-Now all you have to do is edit ``Inbox/config.json``!
+5. Now all you have to do is edit ``Inbox/config.json``!
 
 You can pick to enable/disable each check and edit the discord webhook there.
 

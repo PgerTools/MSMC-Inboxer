@@ -20,14 +20,12 @@ More Checks can be added by checking out ``Custom Checks.md``!
 Adding this to MSMC is very simple.
 
 Go to the root of MSMC and create a new folder called extra then download and place ``inbox.py`` there.
-![](https://media.discordapp.net/attachments/1212680059119341578/1245922627743252490/image.png?ex=665a835e&is=665931de&hm=5be4e1bef01831ccbc98dab5b680f58c80c42d482d20654339109c6e930485dc&=&format=webp&quality=lossless)
 
 Now edit ``MSMC.py`` and add the following import.
 
 ```py
-from extra.inbox import inboxmail
+from addons.inbox import inboxmail
 ```
-![](https://cdn.discordapp.com/attachments/1212680059119341578/1245923518533599252/image.png?ex=665a8432&is=665932b2&hm=ca1ea163ca1a218c3e88637e0dfde51fea9c740b3fe384c5711c615414349a80&)
 
 Search for the validmail function. (You can do this using Ctrl+F)
 

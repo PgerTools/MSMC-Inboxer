@@ -1,10 +1,10 @@
 import imaplib, requests, json
 from email.utils import parsedate_to_datetime
 
-with open('extra/Inbox/config.json', 'r') as config_file:
+with open('addons/Inbox/config.json', 'r') as config_file:
     config = json.load(config_file)
 
-with open('extra/Inbox/custom_checks.json', 'r') as custom_file:
+with open('addons/Inbox/custom_checks.json', 'r') as custom_file:
     custom_checks = json.load(custom_file)
 
 # Default Checks
@@ -41,6 +41,9 @@ def inboxmail(email, password):
             if status == "OK":
                 # Check for Emails
                 counts = {}
+                discord_year = None
+                reddit_year = None
+
                 if check_roblox == True:
                     result, data = imap.uid("search", None, f'(FROM "noreply@roblox.com")')
                     if result == "OK":
@@ -54,7 +57,7 @@ def inboxmail(email, password):
                     if result == "OK":
                         discord_uids = data[0].split()
                         counts['Discord'] = len(discord_uids)
-                        if len(discord_uids) > 1:
+                        if discord_uids:
                             result, data = imap.uid("fetch", discord_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()
@@ -67,14 +70,14 @@ def inboxmail(email, password):
                         main_uids = main_data[0].split()
                         mail_uids = mail_data[0].split()
                         counts['Reddit'] = len(main_uids + mail_uids)
-                        if len(mail_uids) > 1:
+                        if mail_uids:
                             result, data = imap.uid("fetch", mail_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()
                                 email_date = parsedate_to_datetime(date_str)
                                 reddit_year = email_date.year
                         
-                        elif len(main_uids) > 1:
+                        elif main_uids:
                             result, data = imap.uid("fetch", main_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()

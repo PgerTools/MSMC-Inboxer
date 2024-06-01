@@ -1,11 +1,9 @@
 # Custom Checks
-This is a list of custom check configs for different topics.
+This is a list of Custom Check Configs!
 
-Most of the ones here will not be added to the default.
+These will not be added to the default checks because most of these are not Gaming. I wont to keep the main checks all related to gaming since MSMC is for Minecraft.
 
-Why? Since MSMC is for Minecraft I wanted to keep all the default checks to gaming. Here you can find custom checks for other types of sites.
-
-Most of these will most likely never get advanced captures unless I create advanced custom check support which will probably never happen unless heavily requested.
+**Some of the emails might be incorrect, please make a pull request and fix it if you find one <3**
 
 ## Payment Checks
 Custom Config for Payment Sites and Crypto Wallets/Exchanges
@@ -85,6 +83,24 @@ Amazon, Target, eBay, Walmart, Best Buy, Instacart and Newegg
 }
 ```
 
+## Steam Key Checks
+Custom Config for Steam Key Sites
+
+Stake and Roobet
+```json
+{
+    "G2A": {
+        "email": "no-reply@g2a.com"
+    },
+    "Kinguin": {
+        "email": "help@kinguin.net"
+    },
+    "Eneba": {
+        "email": "noreply@eneba.com"
+    }
+}
+```
+
 ## Mega Config
 This is just one big custom config with all of the ones above.
 
@@ -140,12 +156,20 @@ This is just one big custom config with all of the ones above.
     },
     "Newegg": {
         "email": "noreply@newegg.com"
+    },
+    "G2A": {
+        "email": "no-reply@g2a.com"
+    },
+    "Kinguin": {
+        "email": "help@kinguin.net"
+    },
+    "Eneba": {
+        "email": "noreply@eneba.com"
     }
 }
 ```
 
 ## Coming Soon
 I'll add these custom configs later:
-- Steam key checks (like g2a, kinguin)
 - Coding site checks (github, linode, replit)
 - Minecraft hosting sites (why not)

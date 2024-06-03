@@ -4,7 +4,9 @@
         "steam": true,
         "discord": true,
         "reddit": true,
-        "epicgames": true
+        "epicgames": true,
+        "riotgames": true,
+        "rockstargames": true
     },
     "discord_webhook": "REPLACE_WITH_YOUR_WEBHOOK"
 }

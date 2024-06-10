@@ -1,4 +1,4 @@
-# MSMC-Inbox
+# MSMC-Inboxer
 Simple addon for MSMC that inboxes valid mails for emails like Steam, Roblox, Discord and more.
 
 https://github.com/MachineKillin/MSMC
@@ -21,7 +21,7 @@ Adding this to MSMC is very simple.
 
 **Video:** 
 
-https://github.com/PgerTools/MSMC-Inbox/assets/160817198/7a5d6288-67d9-46a2-b7fa-350d6009e4f3
+https://github.com/PgerTools/MSMC-Inboxer/assets/160817198/7a5d6288-67d9-46a2-b7fa-350d6009e4f3
 
 **Step By Step:**
 

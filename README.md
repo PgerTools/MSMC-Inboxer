@@ -25,25 +25,26 @@ https://github.com/PgerTools/MSMC-Inboxer/assets/160817198/7a5d6288-67d9-46a2-b7
 
 **Step By Step:**
 
-1. Go to the root of MSMC and create a new folder called extra then download and place ``inbox.py`` there.
+1. Go to the root of MSMC and create a new folder called addons then download and place ``inbox.py`` there.
 
-2. Now edit ``MSMC.py`` and add the following import.
+   Make sure to also download and place the ``Inbox`` folder.
 
-```py
-from addons.inbox import inboxmail
-```
+3. Now edit ``MSMC.py`` and add the following import.
+   ```py
+   from addons.inbox import inboxmail
+   ```
 
 3. Search for the validmail function. (You can do this using Ctrl+F)
 
 4. Add the end of this function add the following code.
 
-```py
-inboxmail(email, password)
-```
+   ```py
+   inboxmail(email, password)
+   ```
 
 5. Now all you have to do is edit ``Inbox/config.json``!
 
-You can pick to enable/disable each check and edit the discord webhook there.
+   You can pick to enable/disable each check and edit the discord webhook there.
 
 ## Adding Custom Checks
 I made adding your own checks extremely easy!

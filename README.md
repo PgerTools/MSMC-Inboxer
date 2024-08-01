@@ -1,3 +1,6 @@
+## Update
+Sorry there hasnt been an update in awhile. This was not my plan. I have had a lot of stuff happen in real life and haven't had the time for this. I like making stuff like this and I will hopefully be back soon to continue it. Currently it should be fully functional but I have experienced some issues that may skip over some logs. I will hopefully have the time to fix all issues soon and add some new features. If you want to help out please make a pull request and an issue if you find any issues or have a suggestion. Updates will be coming soon! I have about a week until school starts.
+
 # MSMC-Inboxer
 Simple addon for MSMC that inboxes valid mails for emails like Steam, Roblox, Discord and more.
 
